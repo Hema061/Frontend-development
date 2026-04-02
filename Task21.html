@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Callback using  Async</title>
+</head>
+<body>
+    <h2>Fetch API using Callback</h2>
+    <button onclick="useCallback()">Fetch Data</button>
+    <pre id="output"></pre>
+
+    <script>
+        function fetchDataCallback(callback) {
+            fetch('https://jsonplaceholder.typicode.com/comments')
+                .then(function(response) {
+                    if (response.ok) {
+                        return response.json();
+                    } else {
+                        throw new Error("Server responded with status: " + response.status);
+                    }
+                })
+                .then(function(data) {
+                    callback(null, data); 
+                })
+                .catch(function(error) {
+                    callback(error, null); 
+                });
+        }
+
+        function useCallback() {
+            const output = document.getElementById("output");
+            output.textContent = "Fetching data from API using callback...\n";
+
+            fetchDataCallback(function(error, data) {
+                if (error) {
+                    output.textContent = "Error (callback): " + error;
+                } else {
+                    output.textContent = "API data (callback):\n" + JSON.stringify(data, null, 2);
+                }
+
+                output.textContent += "\n\n---\nOperation completed (callback)";
+            });
+        }
+    </script>
+</body>
+</html>
